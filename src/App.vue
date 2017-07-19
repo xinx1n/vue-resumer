@@ -2,7 +2,7 @@
   <div id="app">
     <topbar class="topbar" v-on:preview="preview"></topbar>
     <main>
-      <Editor :resume="resume" :i8="i8" class="editor"/>
+      <Editor :resume="resume" :resumeB="resumeB" :i8="i8" :isArea="isArea" class="editor"/>
       <Preview :resume="resume" :i8="i8" class="preview"/>
     </main>
   </div>
@@ -24,6 +24,7 @@ export default {
         awards: [ {name: ''} ],
         contacts: { qq: '', wechat: '', phone: '', email: '' }
       },
+      resumeB:{},
       i8: {
         profile: { name: '姓名', city: '城市', birth: '生日' },
         workHistory: {company: '公司', content: '工作内容'},
@@ -31,12 +32,23 @@ export default {
         projects: {name: '项目名称', content: '项目内容' } ,
         awards: {name: '奖励详情'} ,
         contacts: { qq: 'QQ', wechat: '微信', phone: '电话', email: '邮箱' }
+      },
+      isArea:{
+        profile: { name: false, city: false, birth: false },
+        workHistory: {company: false, content: true},
+        education: {school: false, duration: false, degree: false} ,
+        projects: {name: false , content: true } ,
+        awards: {name: true} ,
+        contacts: { qq: false, wechat: false, phone: false, email: false }
       }
     }
   },
+  created(){
+    this.resumeB = Object.assign({},this.resume)
+  },
   components: {
       Topbar, Editor, Preview
-    }
+  }
 
 }
 </script>

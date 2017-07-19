@@ -1,8 +1,9 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0;padding: 0;}
-ul {list-style: none;}
+ul,ol{list-style:none;}
 a {text-decoration: none; color:inherit; }
 /*a:hover {color: #845534; }*/
 audio, canvas, iframe, img, svg, video {vertical-align: middle; }
-.clearfix::before, .clearfix::after {content: ""; display: table; }
-.clearfix:after {clear: both; }
-.clearfix {*zoom: 1; }
+body{
+  font-family: -apple-system, "Helvetica Neue", Helvetica, "Nimbus Sans L", Arial, "Liberation Sans", "PingFang SC", "Hiragino Sans GB", "Source Han Sans CN", "Source Han Sans SC", "Microsoft YaHei", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti", SimHei, "WenQuanYi Zen Hei Sharp", sans-serif;
+  font-size: 14px;
+}
