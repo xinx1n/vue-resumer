@@ -1,28 +1,76 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <hello></hello>
+    <topbar class="topbar" v-on:preview="preview"></topbar>
+    <main>
+      <Editor :resume="resume" :i8="i8" class="editor"/>
+      <Preview :resume="resume" :i8="i8" class="preview"/>
+    </main>
   </div>
 </template>
 
 <script>
-import Hello from './components/Hello'
-
+import Topbar from './components/Topbar'
+import Editor from './components/Editor'
+import Preview from './components/Preview'
 export default {
-  name: 'app',
+  data(){
+    return {
+      previewMode: false,
+      resume: {
+        profile: { name: '', city: '', birth: '' },
+        workHistory: [ {company: '', content: ''}],
+        education: [ {school: '', duration: '', degree: ''} ],
+        projects: [ {name: '', content: '' } ],
+        awards: [ {name: ''} ],
+        contacts: { qq: '', wechat: '', phone: '', email: '' }
+      },
+      i8: {
+        profile: { name: '姓名', city: '城市', birth: '生日' },
+        workHistory: {company: '公司', content: '工作内容'},
+        education: {school: '学校', duration: '时间', degree: '学位'} ,
+        projects: {name: '项目名称', content: '项目内容' } ,
+        awards: {name: '奖励详情'} ,
+        contacts: { qq: 'QQ', wechat: '微信', phone: '电话', email: '邮箱' }
+      }
+    }
+  },
   components: {
-    Hello
-  }
+      Topbar, Editor, Preview
+    }
+
 }
 </script>
-
-<style>
-#app {
+<style lang="scss">
+html, body, #app{ height: 100%; overflow: hidden; }
+#app{
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  >.topbar{
+    position: relative; 
+    z-index: 1;
+    box-shadow: 0 0 3px hsla(0,0,0,0.5); 
+  }
+  >main{
+    display: flex;
+    flex: 1;
+    background-color: #ddd;
+    > .editor{
+      width: 34%;
+      margin: 16px 8px 16px 16px;
+      background: white;
+      box-shadow: 0 0 3px hsla(0,0,0,0.5);
+      overflow: hidden;
+    }
+    > .preview{
+      flex: 1;
+      margin: 16px 16px 16px 8px;
+      background: white;
+      box-shadow: 0 0 3px hsla(0,0,0,0.5);
+      overflow: hidden;
+    }
+  }
 }
 </style>

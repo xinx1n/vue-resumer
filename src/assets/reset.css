@@ -1,0 +1,8 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0;padding: 0;}
+ul {list-style: none;}
+a {text-decoration: none; color:inherit; }
+/*a:hover {color: #845534; }*/
+audio, canvas, iframe, img, svg, video {vertical-align: middle; }
+.clearfix::before, .clearfix::after {content: ""; display: table; }
+.clearfix:after {clear: both; }
+.clearfix {*zoom: 1; }
