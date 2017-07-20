@@ -57,8 +57,7 @@ export default {
   },
   methods: {
     addItem(item) {
-      console.log(item)
-      this.resume[item].push(this.resumeB[item][0])
+      this.resume[item].push(JSON.parse(JSON.stringify(this.resumeB[item][0])))
     },
     delItem(item, index) {
       if (this.resume[item].length > 1) {

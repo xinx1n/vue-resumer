@@ -44,7 +44,7 @@ export default {
     }
   },
   created(){
-    this.resumeB = Object.assign({},this.resume)
+    this.resumeB = JSON.parse(JSON.stringify(this.resume))
   },
   components: {
       Topbar, Editor, Preview
