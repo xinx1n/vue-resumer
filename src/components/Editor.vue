@@ -16,8 +16,9 @@
           <el-form v-if="resume[nav.name] instanceof Array">
             <div class="container" v-for="(item,index) in resume[nav.name]" :key="index">
               <el-form-item v-for="(value,key) in item" :key="key" :label="i8[nav.name][key]">
-                <el-input v-if="isArea[nav.name][key]" type="textarea" :autosize="{minRows:2}" v-model="item[key]"></el-input>
-                <el-input v-else v-model="item[key]"></el-input> 
+                <el-input :type="isArea[nav.name][key]" :autosize="{minRows:2}" v-model="item[key]"></el-input>
+                <!-- <el-input v-if="isArea[nav.name][key]" type="textarea" :autosize="{minRows:2}" v-model="item[key]"></el-input>
+                <el-input v-else v-model="item[key]"></el-input>  -->
               </el-form-item>
               <i v-if="resume[nav.name].length > 1" class="el-icon-circle-close" @click="delItem(nav.name,index)"></i>
             </div>
@@ -27,8 +28,9 @@
           </el-form>
           <el-form v-else>
             <el-form-item v-for="(value,key) in resume[nav.name]" :key="key" :label="i8[nav.name][key]">
-              <el-input v-if="isArea[nav.name][key]" type="textarea" :autosize="{minRows:2}" v-model="resume[nav.name][key]"></el-input>
-              <el-input v-else v-model="resume[nav.name][key]"></el-input>
+              <el-input :type="isArea[nav.name][key]" :autosize="{minRows:2}" v-model="resume[nav.name][key]"></el-input>
+              <!-- <el-input v-if="isArea[nav.name][key]" type="textarea" :autosize="{minRows:2}" v-model="resume[nav.name][key]"></el-input>
+              <el-input v-else v-model="resume[nav.name][key]"></el-input> -->
             </el-form-item>
           </el-form>
         </div>

@@ -34,12 +34,12 @@ export default {
         contacts: { qq: 'QQ', wechat: '微信', phone: '电话', email: '邮箱' }
       },
       isArea:{
-        profile: { name: false, city: false, birth: false },
-        workHistory: {company: false, content: true},
-        education: {school: false, duration: false, degree: false} ,
-        projects: {name: false , content: true } ,
-        awards: {name: true} ,
-        contacts: { qq: false, wechat: false, phone: false, email: false }
+        profile: { name: 'text', city: 'text', birth: 'text' },
+        workHistory: {company: 'text', content: 'textarea'},
+        education: {school: 'text', duration: 'text', degree: 'text'} ,
+        projects: {name: 'text' , content: 'textarea' } ,
+        awards: {name: 'textarea'} ,
+        contacts: { qq: 'text', wechat: 'text', phone: 'text', email: 'text' }
       }
     }
   },
