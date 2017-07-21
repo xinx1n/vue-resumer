@@ -1,10 +1,11 @@
 <template>
-  <div id="app">
-    <topbar class="topbar" v-on:preview="preview"></topbar>
+  <div id="app" :class="{previewMode:previewMode}">
+     <topbar class="topbar" v-on:preview="preview"></topbar> 
     <main>
       <Editor :resume="resume" :resumeB="resumeB" :i8="i8" :isArea="isArea" class="editor"/>
       <Preview :resume="resume" :i8="i8" class="preview"/>
     </main>
+    <el-button id="exitPreview" type="success" @click="exitPreview">退出预览</el-button>
   </div>
 </template>
 
@@ -43,6 +44,14 @@ export default {
       }
     }
   },
+  methods:{
+    exitPreview(){
+      this.previewMode = false
+    },
+    preview(){
+      this.previewMode = true
+    }
+  },
   created(){
     this.resumeB = JSON.parse(JSON.stringify(this.resume))
   },
@@ -58,6 +67,7 @@ html, body, #app{ height: 100%; overflow: hidden; }
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  position: relative;
   display: flex;
   flex-direction: column;
   >.topbar{
@@ -81,7 +91,34 @@ html, body, #app{ height: 100%; overflow: hidden; }
       margin: 16px 16px 16px 8px;
       background: white;
       box-shadow: 0 0 3px hsla(0,0,0,0.5);
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
+      &::-webkit-scrollbar {
+        display:none;
+      }
+    }
+  }
+  >#exitPreview{
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    display: none;
+  }
+  &.previewMode{
+    >.topbar{
+      display: none;
+    }
+    >main{
+      >.editor{
+        display: none;
+      }
+      >.preview{
+        margin: 0 auto;
+        max-width: 66%;
+      }
+    }
+    >#exitPreview{
+      display: block;
     }
   }
 }
