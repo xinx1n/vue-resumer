@@ -23,7 +23,7 @@ export default {
         education: [ {school: '', duration: '', degree: ''} ],
         projects: [ {name: '', content: '' } ],
         awards: [ {name: ''} ],
-        contacts: { qq: '', wechat: '', phone: '', email: '' }
+        contacts: { phone: '', email: '', wechat: '', qq: '' }
       },
       resumeB:{},
       i8: {
@@ -32,7 +32,7 @@ export default {
         education: {school: '学校', duration: '时间', degree: '学位'} ,
         projects: {name: '项目名称', content: '项目内容' } ,
         awards: {name: '奖励详情'} ,
-        contacts: { qq: 'QQ', wechat: '微信', phone: '电话', email: '邮箱' }
+        contacts: { phone: '电话', email: '邮箱', wechat: '微信', qq: 'QQ' }
       },
       isArea:{
         profile: { name: 'text', city: 'text', birth: 'text' },
@@ -40,7 +40,7 @@ export default {
         education: {school: 'text', duration: 'text', degree: 'text'} ,
         projects: {name: 'text' , content: 'textarea' } ,
         awards: {name: 'textarea'} ,
-        contacts: { qq: 'text', wechat: 'text', phone: 'text', email: 'text' }
+        contacts: { phone: 'text', email: 'text', wechat: 'text', qq: 'text' }
       }
     }
   },
@@ -54,6 +54,7 @@ export default {
   },
   created(){
     this.resumeB = JSON.parse(JSON.stringify(this.resume))
+    this.resume = JSON.parse(localStorage.getItem('localResume'))
   },
   components: {
       Topbar, Editor, Preview
@@ -64,7 +65,7 @@ export default {
 <style lang="scss">
 html, body, #app{ height: 100%; overflow: hidden; }
 #app{
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  // font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   position: relative;

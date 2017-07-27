@@ -10,7 +10,7 @@
       </ul>
     </nav>
     <ul class="tabpanes">
-      <li v-for="(nav,index) in navs" :key="index" v-show="currentTab===nav.name">
+      <li v-for="(nav,index) in navs" :key="index" v-if="currentTab===nav.name">
         <div>
           <h2>{{nav.title}}</h2>
           <el-form v-if="resume[nav.name] instanceof Array">
@@ -109,6 +109,7 @@ export default {
           position: absolute;
           top: 11px;
           right: 0;
+          cursor: pointer;
         }
       }
       .btncontainer {

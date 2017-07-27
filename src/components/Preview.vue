@@ -1,13 +1,13 @@
 <template>
   <div id="preview">
     <h1>{{resumeC.profile.name||'姓名'}}</h1>
-    <p>{{resumeC.profile.city||'城市'}} | {{resumeC.profile.birth||'生日'}}</p>
+    <p>{{resumeC.profile.birth||'生日'}} | {{resumeC.profile.city||'城市'}}</p>
     <section v-if="resumeC.workHistory.length>0">
       <h2>工作经历</h2>
       <ul>
         <li v-for="(work,index) in resumeC.workHistory" :key="index">
-          {{work.company}}
-          {{work.content}}
+          <p>{{work.company}}：</p>
+          <p class="content">{{work.content}}</p>
         </li>
       </ul>
     </section>
@@ -15,9 +15,9 @@
       <h2>教育经历</h2>
       <ul>
         <li v-for="(edu,index) in resumeC.education" :key="index">
-          {{edu.school}}
           {{edu.duration}}
-          {{edu.degree}}
+          {{edu.school}}
+          {{edu.degree&&edu.degree+'学位'}}
         </li>
       </ul>
     </section>
@@ -25,8 +25,8 @@
       <h2>项目经历</h2>
       <ul>
         <li v-for="(project,index) in resumeC.projects" :key="index">
-          {{project.name}}
-          {{project.content}}
+          <p>{{project.name}}：</p>
+          <p class="content">{{project.content}}</p>
         </li>
       </ul>
     </section>
@@ -34,15 +34,15 @@
       <h2>获奖情况</h2>
       <ul>
         <li v-for="(award,index) in resumeC.awards" :key="index">
-          {{award.name}}
+          <p class="content">{{award.name}}</p>
         </li>
       </ul>
     </section>
-    <section v-if="!isEmpty(resumeC.contacts)">
-      {{resumeC.contacts.qq}}
-      {{resumeC.contacts.wechat}}
-      {{resumeC.contacts.phone}}
-      {{resumeC.contacts.email}}
+    <section v-if="!isEmpty(resumeC.contacts)" class="contacts">
+      <p v-if="resumeC.contacts.phone"><span>{{i8.contacts.phone}}：</span>{{resumeC.contacts.phone}}</p>
+      <p v-if="resumeC.contacts.email"><span>{{i8.contacts.email}}：</span>{{resumeC.contacts.email}}</p>
+      <p v-if="resumeC.contacts.wechat"><span>{{i8.contacts.wechat}}：</span>{{resumeC.contacts.wechat}}</p>
+      <p v-if="resumeC.contacts.qq"><span>{{i8.contacts.qq}}：</span>{{resumeC.contacts.qq}}</p>
     </section>
   </div>
 </template>
@@ -77,6 +77,7 @@ export default {
           tmp[key] = item
         }
       }
+      localStorage.setItem('localResume',JSON.stringify(tmp))
       return tmp
     }
   }
@@ -84,8 +85,51 @@ export default {
 </script>
 
 <style lang="scss">
+  .previewMode #preview{
+    padding: 24px 48px;
+  }
   #preview{
+    position: relative;
     padding: 24px 32px;
     color: #333;
+    font-size: 20px;
+    h1{
+      margin: 8px 0;
+    }
+    >section{
+      padding-top: 8px;
+      &.contacts{
+        position: absolute;
+        top: 24px;
+        right: 48px;
+        >p{
+          font-size: 15px;
+          margin-bottom: 4px;
+          >span{
+            display: inline-block;
+            min-width: 60px;
+            text-align: right;
+          }
+        }
+      }
+      >h2{
+        margin-bottom: 8px;
+        font-size: 26px;
+      }
+      >ul{
+        font-size: 18px;
+        >li{
+          margin-bottom: 8px;
+          line-height: 1.4;
+        }
+      }
+      p{
+        margin-bottom: 8px;
+        &.content{
+          font-size: 16px;
+          color: #555;
+        }
+      }
+    }
   }
 </style>
