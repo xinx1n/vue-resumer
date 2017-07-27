@@ -54,7 +54,8 @@ export default {
   },
   created(){
     this.resumeB = JSON.parse(JSON.stringify(this.resume))
-    this.resume = JSON.parse(localStorage.getItem('localResume'))
+    let localResume = localStorage.getItem('localResume')
+    localResume && (this.resume = JSON.parse(localResume))
   },
   components: {
       Topbar, Editor, Preview
