@@ -3,10 +3,10 @@
         <el-dialog :title="titleC" :visible.sync="signFormVisible" :before-close="myBeforClose">
             <el-form :model="signUser" @submit="submitForm">
                 <el-form-item label="用户名" :label-width="formLabelWidth">
-                    <el-input v-model="signUser.name" auto-complete="off"></el-input>
+                    <el-input v-model="signUser.name" auto-complete="off" @keyup.enter.native="submitForm"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" :label-width="formLabelWidth">
-                    <el-input v-model="signUser.password" auto-complete="off" type="password"></el-input>
+                    <el-input v-model="signUser.password" auto-complete="off" type="password" @keyup.enter.native="submitForm"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
