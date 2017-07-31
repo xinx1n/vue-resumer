@@ -1,6 +1,7 @@
 <template>
   <div id="app" :class="{previewMode:previewMode}">
-     <topbar class="topbar" v-on:preview="preview"></topbar> 
+     <topbar class="topbar" :hasLogIn="hasLogIn" :username="usernameC" @preview="preview" @sign="sign" @logout="logout"></topbar>
+     <signForm :signFormVisible="signFormVisible" :signUser="signUser" :signMode="signMode" @exitSign="exitSign" @submitForm="submitForm" class="signForm"></signForm>
     <main>
       <Editor :resume="resume" :resumeB="resumeB" :i8="i8" :isArea="isArea" class="editor"/>
       <Preview :resume="resume" :i8="i8" class="preview"/>
@@ -13,10 +14,21 @@
 import Topbar from './components/Topbar'
 import Editor from './components/Editor'
 import Preview from './components/Preview'
+import SignForm from './components/SignForm'
+
+import AV from './lib/leancloud'
 export default {
   data(){
     return {
       previewMode: false,
+      hasLogIn: false,
+      signFormVisible: false,
+      signMode:0, // 1 注册 2 登录
+      signUser: {
+        name:'',
+        password:''
+      },
+      user: null,
       resume: {
         profile: { name: '', city: '', birth: '' },
         workHistory: [ {company: '', content: ''}],
@@ -44,21 +56,78 @@ export default {
       }
     }
   },
+  computed:{
+    usernameC(){
+      if(this.user){
+        return this.user.username
+      }
+      return ' '
+    }
+  },
   methods:{
     exitPreview(){
       this.previewMode = false
     },
     preview(){
       this.previewMode = true
-    }
+    },
+    sign(mode){
+      this.signMode = mode || 1
+      this.signFormVisible = true
+    },
+    exitSign(){
+      this.signFormVisible = false
+    },
+    submitForm(){
+      if(this.signMode === 1){
+        this.signup()
+      }else{
+        this.signin()
+      }
+    },
+    signin: function() {
+      console.log('login')
+      AV.User.logIn(this.signUser.name, this.signUser.password).then(function(user) {
+        this.user = user.toJSON()
+        this.signUser.name = this.signUser.password = ''
+        this.signFormVisible = false
+      }.bind(this)).catch(alert)
+    },
+    signup: function() {
+      console.log('signup')
+      AV.User.signUp(this.signUser.name, this.signUser.password).then(function(user) {
+        this.user = user.toJSON()
+        this.signUser.name = this.signUser.password = ''
+        this.signFormVisible = false
+      }.bind(this)).catch(alert)
+    },
+    logout: function() {
+      AV.User.logOut()
+      this.user = null
+    },
   },
   created(){
     this.resumeB = JSON.parse(JSON.stringify(this.resume))
     let localResume = localStorage.getItem('localResume')
     localResume && (this.resume = JSON.parse(localResume))
+    var user = AV.User.current()
+    if(user){
+      this.user = user.toJSON()
+    }
+  },
+  watch: {
+    'user.objectId':{
+      handler(id){
+        if(id){
+          this.hasLogIn = true
+        }else{
+          this.hasLogIn = false
+        }
+      }
+    }
   },
   components: {
-      Topbar, Editor, Preview
+      Topbar, Editor, Preview, SignForm
   }
 
 }
