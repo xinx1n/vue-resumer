@@ -3,7 +3,7 @@
      <topbar class="topbar" :hasLogIn="hasLogIn" :username="usernameC" @preview="preview" @sign="sign" @logout="logout"></topbar>
      <signForm :signFormVisible="signFormVisible" :signUser="signUser" :signMode="signMode" @exitSign="exitSign" @submitForm="submitForm" class="signForm"></signForm>
     <main>
-      <Editor :resume="resume" :resumeB="resumeB" :i8="i8" :isArea="isArea" class="editor"/>
+      <Editor :resume="resume" :resumeB="resumeB" :i8="i8" :inputType="inputType" class="editor"/>
       <Preview :resume="resume" :i8="i8" class="preview"/>
     </main>
     <el-button id="exitPreview" type="success" @click="exitPreview">退出预览</el-button>
@@ -47,7 +47,7 @@ export default {
         awards: {name: '奖励详情'} ,
         contacts: { phone: '电话', email: '邮箱', wechat: '微信', qq: 'QQ' }
       },
-      isArea:{
+      inputType:{
         profile: { name: 'text', city: 'text', birth: 'text' },
         workHistory: {company: 'text', content: 'textarea'},
         education: {school: 'text', duration: 'text', degree: 'text'} ,
