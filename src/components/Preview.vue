@@ -48,6 +48,7 @@
 </template>
 
 <script>
+let timeoutTimer
 export default {
   props:['resume','i8'],
   methods:{
@@ -63,6 +64,12 @@ export default {
         }
       }
       return empty
+    },
+    saveOrUpdate(tmp){
+      timeoutTimer&&clearTimeout(timeoutTimer)
+      timeoutTimer = setTimeout(() => {
+        this.$emit('saveorupdate',tmp)
+      }, 2500)
     }
   },
   computed:{
@@ -77,7 +84,7 @@ export default {
           tmp[key] = item
         }
       }
-      localStorage.setItem('localResume',JSON.stringify(tmp))
+      this.saveOrUpdate(tmp)
       return tmp
     }
   }
