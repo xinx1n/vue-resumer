@@ -20,6 +20,7 @@ import AV from './lib/leancloud'
 export default {
   data(){
     return {
+      block:false,
       previewMode: false,
       hasLogIn: false,
       signFormVisible: false,
@@ -28,7 +29,7 @@ export default {
         name:'',
         password:''
       },
-      user: null,
+      user: {},
       resume: {
         profile: { name: '', city: '', birth: '' },
         workHistory: [ {company: '', content: ''}],
@@ -74,6 +75,7 @@ export default {
     sign(mode){
       this.signMode = mode || 1
       this.signFormVisible = true
+      this.block = false
     },
     exitSign(){
       this.signFormVisible = false
@@ -86,7 +88,9 @@ export default {
       }
     },
     signin: function() {
-      console.log('login')
+      console.log('login',this.block)
+      if(this.block) return
+      this.block = true
       AV.User.logIn(this.signUser.name, this.signUser.password).then(function(user) {
         this.user = user.toJSON()
         this.signUser.name = this.signUser.password = ''
@@ -94,7 +98,9 @@ export default {
       }.bind(this)).catch(alert)
     },
     signup: function() {
-      console.log('signup')
+      console.log('signup',this.block)
+      if(this.block) return
+      this.block = true
       AV.User.signUp(this.signUser.name, this.signUser.password).then(function(user) {
         this.user = user.toJSON()
         this.signUser.name = this.signUser.password = ''
@@ -103,7 +109,7 @@ export default {
     },
     logout: function() {
       AV.User.logOut()
-      this.user = null
+      this.user = { }
     },
   },
   created(){
