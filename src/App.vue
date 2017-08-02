@@ -1,6 +1,6 @@
 <template>
   <div id="app" :class="{previewMode:previewMode}">
-     <topbar class="topbar" :hasLogIn="hasLogIn" :username="usernameC" @preview="preview" @sign="sign" @logout="logout"></topbar>
+     <topbar class="topbar" :hasLogIn="hasLogIn" :username="usernameC" :showLoadLocalDataBtn="showLoadLocalDataBtn"  @preview="preview" @sign="sign" @logout="logout" @loadLocalData="loadLocalData" @clearLocalData="clearLocalData"></topbar>
      <signForm :signFormVisible="signFormVisible" :signUser="signUser" :signMode="signMode" @exitSign="exitSign" @submitForm="submitForm" class="signForm"></signForm>
     <main>
       <Editor :resume="resume" :resumeB="resumeB" :i8="i8" :inputType="inputType" class="editor"/>
@@ -23,12 +23,13 @@ const GUpdateTime = 'updateAt'
 export default {
   data(){
     return {
-      initFetch: true,
-      block:false,
+      showLoadLocalDataBtn: false,
+      saveOrUpdateFl: true,
+      block: false,
       previewMode: false,
       hasLogIn: false,
       signFormVisible: false,
-      signMode:0, // 1 注册 2 登录
+      signMode: 0, // 1 注册 2 登录
       signUser: {
         name:'',
         password:''
@@ -50,7 +51,7 @@ export default {
         education: {school: '学校', duration: '时间', degree: '学位'} ,
         projects: {name: '项目名称', content: '项目内容' } ,
         awards: {name: '奖励详情'} ,
-        contacts: { phone: '电话', email: '邮箱', wechat: '微信', qq: 'QQ' }
+        contacts: { phone: '电话', email: '邮箱', wechat: '微信', qq: 'Q Q' }
       },
       inputType:{
         profile: { name: 'text', city: 'text', birth: 'text' },
@@ -86,13 +87,14 @@ export default {
       this.signFormVisible = false
     },
     submitForm(){
+      this.saveOrUpdateFl = true
       if(this.signMode === 1){
         this.signup()
       }else{
         this.signin()
       }
     },
-    signin: function() {
+    signin() {
       if(this.block) return
       this.block = true
       AV.User.logIn(this.signUser.name, this.signUser.password).then(function(user) {
@@ -100,9 +102,10 @@ export default {
         this.signUser.name = this.signUser.password = ''
         this.signFormVisible = false
         this.initResume()
+        this.showLocalDataBtnFn()
       }.bind(this)).catch(alert)
     },
-    signup: function() {
+    signup() {
       if(this.block) return
       this.block = true
       AV.User.signUp(this.signUser.name, this.signUser.password).then(function(user) {
@@ -110,20 +113,91 @@ export default {
         this.signUser.name = this.signUser.password = ''
         this.signFormVisible = false
         this.initResume()
+        this.showLocalDataBtnFn()
       }.bind(this)).catch(alert)
     },
-    logout: function() {
+    logout() {
       AV.User.logOut()
-      this.initFetch = true
+      this.saveOrUpdateFl = true
+      this.initResume()
       this.user = { }
     },
-    initResumeFromLocal(){
-      let localResume = localStorage.getItem(GLocalResume)
-      localResume && (this.resume = JSON.parse(localResume))
+    getResumeLocalKey() {
+      let key = GLocalResume
+      if(AV.User.current()){
+        key = AV.User.current().id
+      }
+      return key
     },
-    saveAtLocal(resume,updateAt){
-      localStorage.setItem(GLocalResume,resume)
-      localStorage.setItem(GUpdateTime,updateAt)
+    showLocalDataBtnFn() {
+      let local = localStorage.getItem(GLocalResume)
+      if(local){
+          this.showLoadLocalDataBtn = true
+      }else{
+        this.showLoadLocalDataBtn = false
+      }
+    },
+    loadLocalData() {
+      if(AV.User.current()){
+        let stor = localStorage.getItem(GLocalResume)
+        if(stor){
+          this.$confirm('载入本地数据将会覆盖云端数据，是否载入？', '提示', {
+            confirmButtonText: '载入',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            localStorage.setItem(AV.User.current().id,stor)
+            localStorage.removeItem(GLocalResume)
+            this.saveOrUpdateFl = false
+            this.initResumeFromLocal()
+            this.$message({
+              type: 'success',
+              message: '已载入'
+            })
+            this.showLocalDataBtnFn()
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消'
+            })          
+          })
+        }
+      }
+    },
+    clearLocalData() {
+      this.$confirm('将会删除本地数据，是否继续？', '提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        if(AV.User.current()){
+          localStorage.removeItem(AV.User.current().id)
+        }
+        localStorage.removeItem(GLocalResume)
+        this.initResumeFromLocal()
+        this.$message({
+          type: 'success',
+          message: '已删除'
+        })
+        this.showLocalDataBtnFn()
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })          
+      })
+    },
+    initResumeFromLocal() {
+      let localResume = localStorage.getItem(this.getResumeLocalKey())
+      if(localResume){
+        this.resume = JSON.parse(localResume).resume
+      }else{
+        this.resume = JSON.parse(JSON.stringify(this.resumeB))
+      }
+    },
+    saveAtLocal(resume,updateAt) {
+      let l = { resume, updateAt }
+      localStorage.setItem(this.getResumeLocalKey(),JSON.stringify(l))
     },
     initResume(){
       if(!AV.User.current()){
@@ -134,34 +208,35 @@ export default {
       let muser = AV.Object.createWithoutData('User', AV.User.current().id)
       const query = new AV.Query(Resume).equalTo('user', muser).descending('createdAt')
       query.find().then((data)=>{
-        window.asdf = data
         if(data.length>0&&this.compareTime(data[0].updatedAt)){
           console.log('fetch')
-          this.initFetch = true
+          this.saveOrUpdateFl = true
           this.resume = JSON.parse(data[0].attributes.content)
-          this.saveAtLocal(JSON.stringify(this.resume),data[0].updatedAt)
+          this.saveAtLocal(this.resume,data[0].updatedAt)
         }else{
           console.log('local hasuser')
+          this.saveOrUpdateFl = false
           this.initResumeFromLocal()
         }
       },(error)=>{
-        console.log('local hasuser')
+        console.log('local forerror')
+        this.saveOrUpdateFl = false
         this.initResumeFromLocal()
       })
     },
-    saveOrUpdateResume: function (val) {
+    saveOrUpdateResume (val) {
       console.log('saveorupdate1')
-      let value = JSON.stringify(val)
-      if(this.initFetch){
-        this.initFetch = false
+      if(this.saveOrUpdateFl){
+        this.saveOrUpdateFl = false
         return
       }
       console.log('saveorupdate2')
+      let value = JSON.stringify(val)
       if (!value||this.resumeCOldStr===value) { return }
       console.log('saveorupdate2.5')
       this.resumeCOldStr = value
       if(!AV.User.current()){
-        this.saveAtLocal(value,new Date().toString())
+        this.saveAtLocal(val,new Date().toString())
         return
       }
       console.log('saveorupdate3')
@@ -184,7 +259,7 @@ export default {
           }).setACL(acl)
         }
         newResume.save().then((result)=>{
-          this.saveAtLocal(value,result.updatedAt)
+          this.saveAtLocal(val,result.updatedAt)
           this.successNotice()
         },(error)=>{
           this.failNotice()
@@ -210,8 +285,9 @@ export default {
     compareTime(str){
       if(!str){ return false }
       try {
-        let localTime = localStorage.getItem(GUpdateTime)
-        let localResume = localStorage.getItem(GLocalResume)
+        let localStore = JSON.parse(localStorage.getItem(this.getResumeLocalKey()))
+        let localTime = localStore.updateAt
+        let localResume = localStore.resume
         if(localTime&&localResume){
           return (new Date(str) - new Date(localTime)) > 0
         }
@@ -223,10 +299,15 @@ export default {
   },
   created(){
     this.resumeB = JSON.parse(JSON.stringify(this.resume))
-    this.resumeCOldStr = localStorage.getItem(GLocalResume)||' '
+    let local = localStorage.getItem(this.getResumeLocalKey())
+    if(local){
+      let tmp = JSON.parse(local).resume||' '
+      this.resumeCOldStr = JSON.stringify(tmp)
+    }
     let user = AV.User.current()
     user&&(this.user = user.toJSON())
     this.initResume()
+    this.showLocalDataBtnFn()
   },
   watch: {
     'user.objectId':{
