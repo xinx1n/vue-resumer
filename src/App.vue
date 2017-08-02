@@ -17,6 +17,7 @@ import Preview from './components/Preview'
 import SignForm from './components/SignForm'
 
 import AV from './lib/leancloud'
+import getErrorMessage from './lib/getErrorMessage'
 let Resume = AV.Object.extend('Resume')
 const GLocalResume = 'localResume'
 const GUpdateTime = 'updateAt'
@@ -103,10 +104,18 @@ export default {
         this.signFormVisible = false
         this.initResume()
         this.showLocalDataBtnFn()
-      }.bind(this)).catch(alert)
+      }.bind(this)).catch(this.signMessage)
     },
     signup() {
       if(this.block) return
+      if(!this.signUser.name||!this.signUser.password){
+        this.$message({
+          type:"warning",
+          message:"请填写完整数据",
+          showClose:true
+        })
+        return
+      }
       this.block = true
       AV.User.signUp(this.signUser.name, this.signUser.password).then(function(user) {
         this.user = user.toJSON()
@@ -114,7 +123,7 @@ export default {
         this.signFormVisible = false
         this.initResume()
         this.showLocalDataBtnFn()
-      }.bind(this)).catch(alert)
+      }.bind(this)).catch(this.signMessage)
     },
     logout() {
       AV.User.logOut()
@@ -281,6 +290,15 @@ export default {
         type: 'error',
         duration: 2000
       })
+    },
+    signMessage(error){
+      let message = getErrorMessage(error)
+      this.$message({
+        type: 'warning',
+        message,
+        showClose:true
+      })
+      this.block = false
     },
     compareTime(str){
       if(!str){ return false }
