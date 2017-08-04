@@ -196,10 +196,27 @@ export default {
         })          
       })
     },
+    fixResume(resumeTmp){
+      let tmp = {}
+      for(let key in resumeTmp){
+        let item = resumeTmp[key]
+        if(item instanceof Array){
+          if(item.length > 0){
+            tmp[key] = item
+          }else{
+            tmp[key] = this.resumeB[key]
+          }
+        }else{
+          tmp[key] = item
+        }
+      }
+      return tmp
+    },
     initResumeFromLocal() {
       let localResume = localStorage.getItem(this.getResumeLocalKey())
       if(localResume){
-        this.resume = JSON.parse(localResume).resume
+        let resumeTmp = JSON.parse(localResume).resume
+        this.resume = this.fixResume(resumeTmp)
       }else{
         this.resume = JSON.parse(JSON.stringify(this.resumeB))
       }
@@ -220,8 +237,9 @@ export default {
         if(data.length>0&&this.compareTime(data[0].updatedAt)){
           // console.log('fetch')
           this.saveOrUpdateFl = true
-          this.resume = JSON.parse(data[0].attributes.content)
-          this.saveAtLocal(this.resume,data[0].updatedAt)
+          let resumeTmp = JSON.parse(data[0].attributes.content)
+          this.resume = this.fixResume(resumeTmp)
+          this.saveAtLocal(resumeTmp,data[0].updatedAt)
         }else{
           // console.log('local hasuser')
           this.saveOrUpdateFl = false
