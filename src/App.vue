@@ -380,6 +380,8 @@ html, body, #app{ height: 100%; overflow: hidden; }
     display: flex;
     flex: 1;
     background-color: #ddd;
+    position: relative;
+    overflow: hidden;
     > .editor{
       width: 34%;
       margin: 16px 8px 16px 16px;
