@@ -55,7 +55,7 @@ export default {
     filter(array){ // 找出非空对象
       return array.filter(item=> !this.isEmpty(item))
     },
-    isEmpty(object){ // 只要有一个 value 不是 falsy，就返回 flase
+    isEmpty(object){ // 只要有一个 value 不是 falsy，就返回 false
       let empty = true
       for(let key in object){
         if(object[key]){

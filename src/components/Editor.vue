@@ -76,6 +76,7 @@ export default {
     background: #000;
     width: 80px;
     >ul>li {
+      cursor: pointer;
       padding: 16px 0;
       text-align: center;
       >.icon {
