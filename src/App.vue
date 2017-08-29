@@ -20,7 +20,7 @@ import AV from './lib/leancloud'
 import getErrorMessage from './lib/getErrorMessage'
 let Resume = AV.Object.extend('Resume')
 const GLocalResume = 'localResume'
-const GUpdateTime = 'updateAt'
+// const GUpdateTime = 'updateAt'
 export default {
   data(){
     return {
@@ -168,7 +168,7 @@ export default {
             this.$message({
               type: 'info',
               message: '已取消'
-            })          
+            })
           })
         }
       }
@@ -193,7 +193,7 @@ export default {
         this.$message({
           type: 'info',
           message: '已取消'
-        })          
+        })
       })
     },
     fixResume(resumeTmp){
@@ -372,9 +372,9 @@ html, body, #app{ height: 100%; overflow: hidden; }
   display: flex;
   flex-direction: column;
   >.topbar{
-    position: relative; 
+    position: relative;
     z-index: 1;
-    box-shadow: 0 0 3px hsla(0,0,0,0.5); 
+    box-shadow: 0 0 3px hsla(0,0,0,0.5);
   }
   >main{
     display: flex;
