@@ -54,5 +54,8 @@ module.exports = {
         }
       }
     ]
+  },
+  externals: {
+    'leancloud-storage': 'AV'
   }
 }
