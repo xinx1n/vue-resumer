@@ -3,13 +3,21 @@
 import 'normalize.css/normalize.css'
 import './assets/reset.css'
 
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-default/index.css'
-
 import Vue from 'vue'
+import { Dialog, Input, Button, Tooltip, Form, FormItem, Icon, MessageBox, Message, Notification } from 'element-ui'
+Vue.use(Dialog)
+Vue.use(Input)
+Vue.use(Button)
+Vue.use(Tooltip)
+Vue.use(Form)
+Vue.use(FormItem)
+Vue.use(Icon)
+Vue.prototype.$msgbox = MessageBox
+Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$notify = Notification
+Vue.prototype.$message = Message
 import App from './App'
 
-Vue.use(ElementUI)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
