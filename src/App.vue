@@ -223,7 +223,7 @@ export default {
     },
     initResume(){
       if(!AV.User.current()){
-        // console.log('local nouser')
+        console.log('local nouser')
         this.initResumeFromLocal()
         return
       }
@@ -231,38 +231,38 @@ export default {
       const query = new AV.Query(Resume).equalTo('user', muser).descending('createdAt')
       query.find().then((data)=>{
         if(data.length>0&&this.compareTime(data[0].updatedAt)){
-          // console.log('fetch')
+          console.log('fetch')
           this.saveOrUpdateFl = true
           let resumeTmp = JSON.parse(data[0].attributes.content)
           this.resume = this.fixResume(resumeTmp)
           this.saveAtLocal(resumeTmp,data[0].updatedAt)
         }else{
-          // console.log('local hasuser')
+          console.log('local hasuser')
           this.saveOrUpdateFl = false
           this.initResumeFromLocal()
         }
       },(error)=>{
-        // console.log('local forerror')
+        console.log('local forerror')
         this.saveOrUpdateFl = false
         this.initResumeFromLocal()
       })
     },
     saveOrUpdateResume (val) {
-      // console.log('saveorupdate1')
+      console.log('saveorupdate1')
       if(this.saveOrUpdateFl){
         this.saveOrUpdateFl = false
         return
       }
-      // console.log('saveorupdate2')
+      console.log('saveorupdate2')
       let value = JSON.stringify(val)
       if (!value||this.resumeCOldStr===value) { return }
-      // console.log('saveorupdate2.5')
+      console.log('saveorupdate2.5')
       this.resumeCOldStr = value
       if(!AV.User.current()){
         this.saveAtLocal(val,new Date().toString())
         return
       }
-      // console.log('saveorupdate3')
+      console.log('saveorupdate3')
       let muser = AV.Object.createWithoutData('User', AV.User.current().id)
       const query = new AV.Query(Resume).equalTo('user', muser).descending('createdAt')
       let newResume
