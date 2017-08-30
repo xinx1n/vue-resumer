@@ -138,13 +138,9 @@ export default {
       }
       return key
     },
-    showLocalDataBtnFn() {
+    showLocalDataBtnFn: function () {
       let local = localStorage.getItem(GLocalResume)
-      if(local){
-          this.showLoadLocalDataBtn = true
-      }else{
-        this.showLoadLocalDataBtn = false
-      }
+      this.showLoadLocalDataBtn = !!local
     },
     loadLocalData() {
       if(AV.User.current()){
@@ -275,7 +271,7 @@ export default {
           newResume = AV.Object.createWithoutData('Resume', data[0].id)
           newResume.set('content', value)
         }else{
-          var acl = new AV.ACL()
+          let acl = new AV.ACL()
           acl.setPublicReadAccess(false)
           acl.setPublicWriteAccess(false)
           acl.setReadAccess(AV.User.current(), true)
@@ -348,11 +344,7 @@ export default {
   watch: {
     'user.objectId':{
       handler(id){
-        if(id){
-          this.hasLogIn = true
-        }else{
-          this.hasLogIn = false
-        }
+         this.hasLogIn = !!id
       }
     }
   },
