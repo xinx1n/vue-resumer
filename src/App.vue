@@ -200,7 +200,7 @@ export default {
           if(item.length > 0){
             tmp[key] = item
           }else{
-            tmp[key] = this.resumeB[key]
+            tmp[key] = JSON.parse(JSON.stringify(this.resumeB[key]))
           }
         }else{
           tmp[key] = item
