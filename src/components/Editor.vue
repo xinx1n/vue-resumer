@@ -18,7 +18,7 @@
               <el-form-item v-for="(value,key) in item" :key="key" :label="i8[nav.name][key]">
                 <el-input :type="inputType[nav.name][key]" :autosize="{minRows:2}" v-model="item[key]"></el-input>
                 <!-- <el-input v-if="inputType[nav.name][key]" type="textarea" :autosize="{minRows:2}" v-model="item[key]"></el-input>
-                <el-input v-else v-model="item[key]"></el-input>  -->
+                  <el-input v-else v-model="item[key]"></el-input>  -->
               </el-form-item>
               <i v-if="resume[nav.name].length > 1" class="el-icon-circle-close" @click="delItem(nav.name,index)"></i>
             </div>
@@ -30,7 +30,7 @@
             <el-form-item v-for="(value,key) in resume[nav.name]" :key="key" :label="i8[nav.name][key]">
               <el-input :type="inputType[nav.name][key]" :autosize="{minRows:2}" v-model="resume[nav.name][key]"></el-input>
               <!-- <el-input v-if="inputType[nav.name][key]" type="textarea" :autosize="{minRows:2}" v-model="resume[nav.name][key]"></el-input>
-              <el-input v-else v-model="resume[nav.name][key]"></el-input> -->
+                <el-input v-else v-model="resume[nav.name][key]"></el-input> -->
             </el-form-item>
           </el-form>
         </div>
@@ -99,7 +99,7 @@ export default {
       height: 100%;
       overflow: auto;
       &::-webkit-scrollbar {
-        display:none;
+        display: none;
       }
       .container {
         position: relative;
